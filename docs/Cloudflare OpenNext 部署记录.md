@@ -13,7 +13,7 @@
 | 框架 / 适配器 | `@opennextjs/cloudflare` |
 | 本地 / CI 构建 | `pnpm exec opennextjs-cloudflare build` 或 `pnpm run deploy` |
 | Worker 名称 | `dt-expo-international`（见 `wrangler.jsonc`） |
-| Node.js 版本 | 20（`.node-version`） |
+| Node.js 版本 | 22（`.node-version`；Wrangler 4 要求 ≥ 22，勿再用 20） |
 | 包管理器 | `pnpm@10.11.1`（`package.json` 的 `packageManager` 字段；lockfile 须与 CI pnpm 10 兼容） |
 | 兼容性标志 | `nodejs_compat`（`wrangler.jsonc` 已声明；控制台生产/预览也需具备） |
 
@@ -74,6 +74,16 @@ pnpm preview
 ```bash
 pnpm deploy
 ```
+
+Cloudflare Workers Builds 建议：
+
+| 项 | 值 |
+| --- | --- |
+| Build command | `pnpm exec opennextjs-cloudflare build` |
+| Deploy command | `pnpm exec wrangler deploy`（或 `pnpm exec opennextjs-cloudflare deploy`） |
+| Node.js | 22（由 `.node-version` 指定） |
+
+说明：平台会先自动跑一次 `pnpm install --frozen-lockfile`，构建命令里不必再写 `pnpm install`。
 
 ## 部署后检查
 
