@@ -52,13 +52,23 @@ pnpm install
 pnpm build
 ```
 
-可选（耗时更长，在 Workers runtime 预览）：
+`pnpm build`（Next 本体构建）可在 Windows 上验证通过。
+
+OpenNext 打包（`pnpm preview` / `pnpm deploy` / `opennextjs-cloudflare build`）在 **原生 Windows 上不完全支持**，官方建议使用 **WSL / Linux / macOS**，或在 Cloudflare Workers Builds / GitHub Actions（Linux runner）中执行。本机若出现类似：
+
+```text
+ENOENT: ... open-next.config.edge.mjs
+```
+
+请改到 WSL 或 CI 执行 OpenNext 构建，不要在原生 PowerShell 上强行打包。
+
+可选（Linux/WSL，耗时更长，在 Workers runtime 预览）：
 
 ```bash
 pnpm preview
 ```
 
-一键部署到 Cloudflare（需已登录 `wrangler`）：
+一键部署到 Cloudflare（需已登录 `wrangler`，建议在 Linux/WSL/CI）：
 
 ```bash
 pnpm deploy
