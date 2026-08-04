@@ -14,6 +14,7 @@
 | 本地 / CI 构建 | `pnpm exec opennextjs-cloudflare build` 或 `pnpm run deploy` |
 | Worker 名称 | `dt-expo-international`（见 `wrangler.jsonc`） |
 | Node.js 版本 | 20（`.node-version`） |
+| 包管理器 | `pnpm@10.11.1`（`package.json` 的 `packageManager` 字段；lockfile 须与 CI pnpm 10 兼容） |
 | 兼容性标志 | `nodejs_compat`（`wrangler.jsonc` 已声明；控制台生产/预览也需具备） |
 
 **不要**使用以下旧 Pages 路径：
