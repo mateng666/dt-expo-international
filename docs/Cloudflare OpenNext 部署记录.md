@@ -7,6 +7,78 @@
 
 创建 Worker 时选 **Create Worker → Continue with GitHub**，不要点底部「想要部署 Pages?」。
 
+## 为什么选 Worker 而不是 Pages？为什么 Next 14 用 Pages、现在 16 用 Worker？
+
+核心结论：**不是 Cloudflare 故意削弱 Pages，而是「跑 Next.js 的适配器」换代了**——旧适配器挂在 Pages 上且已废弃；新适配器挂在 Workers 上，才是 Next 16 的官方路径。
+
+### 1. 先分清三个概念
+
+| 概念 | 是什么 | 和本次的关系 |
+| --- | --- | --- |
+| **Cloudflare Pages** | 偏「站点托管」产品：连 Git、静态资源、预览域名；历史上用 **Pages Functions** 跑边缘函数 | `slhy-website`（Next 14）走这条 |
+| **Cloudflare Workers** | 通用边缘计算运行时：可跑完整请求处理、绑定 KV/R2/D1 等 | 本仓库（Next 16 + OpenNext）走这条 |
+| **适配器（adapter）** | 把 Next.js 的构建产物「翻译」成 Cloudflare 能执行的格式 | 真正决定你该选 Pages 还是 Worker |
+
+也就是说：控制台选 Pages 还是 Worker，取决于 **当前官方适配器部署到哪一侧**，不是「Next 大版本号本身规定必须用某个产品名」。
+
+### 2. Next 14 时代为什么用 Pages？
+
+当时 Cloudflare 官方给 Next.js（尤其 Pages Router + SSR）的路径是：
+
+- 适配器：`@cloudflare/next-on-pages`
+- 托管面：Cloudflare **Pages**
+- 构建：`npx @cloudflare/next-on-pages@1`，输出到 `.vercel/output/static` 一类目录
+- 运行时约束：页面侧大量使用 **Edge Runtime**（如 `export const runtime = 'experimental-edge'`）
+- 兼容性：需要 `nodejs_compat` 等标志
+
+`slhy-website`《Cloudflare Pages 部署记录》整份就是按这条路径落地的，所以 Next 14 项目「选 Pages」是正确、也是当时唯一成熟的选择。
+
+### 3. 为什么这条路径不能继续给 Next 16 用？
+
+1. **`@cloudflare/next-on-pages` 已废弃**  
+   Cloudflare / 社区明确转向新方案；旧适配器不再跟进新 Next 大版本特性。
+
+2. **Next 16（App Router）能力超出旧 Edge 适配模型**  
+   App Router、更完整的 Node.js API 面、流式渲染、缓存语义等，更适合在 **Workers + Node.js 兼容运行时** 上跑，而不是继续塞进 next-on-pages 那套 Edge 约束。
+
+3. **官方新路径是 OpenNext → Workers**  
+   - 适配器：`@opennextjs/cloudflare`  
+   - 部署：`wrangler` / Workers Builds  
+   - 运行时：Next 的 **Node.js runtime**（在 Workers 上靠 `nodejs_compat` 等提供 Node API）  
+   - 文档与脚手架（如 `npm create cloudflare -- --framework=next`）默认指向 **Workers**，不再推荐 Pages + next-on-pages
+
+因此：不是「Next 16 不能部署到 Cloudflare」，而是 **不能再按 Next 14 那套 Pages 向导去部署 Next 16**。
+
+### 4. Worker 是否功能比 Pages「少」？
+
+对本次 Next 站点来说，**不少功能，入口换了**：
+
+| 能力 | Pages（旧 next-on-pages） | Workers（OpenNext） |
+| --- | --- | --- |
+| 环境变量 / Secrets | 有 | 有（Worker 设置或 wrangler） |
+| 自定义域名 | 有 | 有（Worker → 自定义域） |
+| Git 自动构建 | Pages 很顺手 | Workers Builds / GitHub Actions |
+| SSR / 中间件 / App Router | 受 Edge 适配限制 | OpenNext 面向完整 Next（Node runtime） |
+| KV / R2 / D1 等绑定 | 可配，但旧适配器场景受限 | Workers 一等公民 |
+
+旧印象里「Pages 才能配环境变量、Worker 很裸」已经过时；当前缺口主要是 **操作习惯和菜单位置**，不是能力缺失。
+
+### 5. 和本仓库的对应关系
+
+| 项目 | Next | 适配器 | 控制台应选 |
+| --- | --- | --- | --- |
+| `slhy-website` | 14 Pages Router | `@cloudflare/next-on-pages`（历史） | **Pages** |
+| `dt-expo-international` | 16 App Router + next-intl | `@opennextjs/cloudflare` | **Worker** |
+
+若强行对 Next 16 仍选 Pages + next-on-pages：高概率构建失败、Edge 运行时不兼容、或官方不再维护导致后续升级无路。  
+若选 Worker + OpenNext：与 Cloudflare 现行文档一致，也是本仓库 `wrangler.jsonc` / `pnpm deploy` 已落地的路径。
+
+### 6. 一句话记忆
+
+- **Next 14 + 旧文档 → Pages**：因为当时适配器就叫 next-on-pages，产物挂在 Pages。  
+- **Next 16 + 现文档 → Worker**：因为适配器换成 OpenNext，产物挂在 Workers。  
+- 选的是 **适配器世代**，不是「Worker 比 Pages 高级」或「Pages 被淘汰到不能托管静态站」——静态站仍可用 Pages；**带完整 Next SSR 的 16 应用，官方已转到 Worker**。
+
 ## Cloudflare 配置
 
 | 配置项 | 值 |
