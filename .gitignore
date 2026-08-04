@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# cloudflare / open-next
+.open-next
+.wrangler
+.dev.vars
+cloudflare-env.d.ts
 
 # vercel
 .vercel

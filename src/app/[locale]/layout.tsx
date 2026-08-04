@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { CookieBanner } from "@/components/legal/CookieBanner";
 import { routing } from "@/i18n/routing";
+import { getSiteUrl } from "@/lib/site-url";
 
 type Props = {
   children: React.ReactNode;
@@ -25,7 +26,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Meta" });
 
   return {
-    metadataBase: new URL("https://www.eventnovas.com"),
+    metadataBase: new URL(getSiteUrl()),
     title: {
       default: t("homeTitle"),
       template: `%s | ${t("siteName")}`,
