@@ -2,33 +2,11 @@
 
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Briefcase, ChevronDown, Search, User } from "lucide-react";
-import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Search, User } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 export function Header() {
   const t = useTranslations("Header");
-  const pathname = usePathname();
-  const showLoggedIn = pathname.includes("/register");
-
-  const navItems = [
-    { label: t("region"), href: "/" as const, dropdown: true, available: false },
-    {
-      label: t("meetingType"),
-      href: "/" as const,
-      dropdown: true,
-      available: false,
-    },
-    {
-      label: t("ditexpo"),
-      href: "/meetings/1" as const,
-      dropdown: false,
-      available: true,
-    },
-  ];
-
-  const unavailableNavClassName =
-    "inline-flex cursor-not-allowed items-center gap-1 text-[16px] text-text-muted/60 select-none xl:text-[18px]";
 
   return (
     <header className="sticky top-0 z-50 h-[100px] border-b border-border-soft bg-white">
@@ -47,31 +25,12 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-5 lg:flex xl:gap-6">
-          {navItems.map((item) =>
-            item.available ? (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="inline-flex items-center gap-1 text-[16px] text-foreground transition-colors hover:text-brand xl:text-[18px]"
-              >
-                {item.label}
-                {item.dropdown ? (
-                  <ChevronDown className="h-4 w-4 text-text-muted" strokeWidth={2} />
-                ) : null}
-              </Link>
-            ) : (
-              <span
-                key={item.label}
-                aria-disabled="true"
-                className={unavailableNavClassName}
-              >
-                {item.label}
-                {item.dropdown ? (
-                  <ChevronDown className="h-4 w-4" strokeWidth={2} />
-                ) : null}
-              </span>
-            ),
-          )}
+          <Link
+            href="/meetings/1"
+            className="inline-flex items-center gap-1 text-[16px] text-foreground transition-colors hover:text-brand xl:text-[18px]"
+          >
+            {t("ditexpo")}
+          </Link>
         </nav>
 
         <div className="mx-auto hidden w-full max-w-[280px] md:block xl:max-w-[320px]">
@@ -89,34 +48,13 @@ export function Header() {
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-3 xl:gap-4">
-          <LanguageSwitcher />
           <span
             aria-disabled="true"
-            className="hidden cursor-not-allowed items-center gap-1.5 text-[14px] text-text-muted/60 select-none xl:inline-flex xl:text-[16px]"
+            className="inline-flex cursor-not-allowed items-center gap-1.5 text-[14px] text-text-muted/60 select-none xl:text-[16px]"
           >
-            <Briefcase className="h-4 w-4" strokeWidth={2} />
-            {t("businessCooperation")}
+            <User className="h-4 w-4" strokeWidth={2} />
+            {t("loginRegister")}
           </span>
-          {showLoggedIn ? (
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 text-[14px] text-foreground xl:text-[16px]"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#DBEAFE] text-[13px] font-semibold text-brand">
-                T
-              </span>
-              <span>Tom</span>
-              <ChevronDown className="h-4 w-4 text-text-muted" strokeWidth={2} />
-            </button>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="inline-flex cursor-not-allowed items-center gap-1.5 text-[14px] text-text-muted/60 select-none xl:text-[16px]"
-            >
-              <User className="h-4 w-4" strokeWidth={2} />
-              {t("loginRegister")}
-            </span>
-          )}
         </div>
       </div>
     </header>

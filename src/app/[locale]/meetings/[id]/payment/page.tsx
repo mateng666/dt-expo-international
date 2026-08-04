@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
-import { RegistrationForm } from "@/components/register/RegistrationForm";
+import { PaymentCheckoutCard } from "@/components/payment/PaymentCheckoutCard";
 import { DecorBackground } from "@/components/shared/DecorBackground";
+import { buildPendingOrder } from "@/data/payment";
 import { getAllMeetingIds, getMeetingById } from "@/data/meetings";
 
-interface RegisterPageProps {
+interface PaymentCheckoutPageProps {
   params: Promise<{ locale: string; id: string }>;
   searchParams: Promise<{ plan?: string }>;
 }
@@ -14,33 +15,31 @@ export function generateStaticParams() {
   return getAllMeetingIds().map((id) => ({ id }));
 }
 
-export async function generateMetadata({
-  params,
-}: RegisterPageProps): Promise<Metadata> {
-  const { id } = await params;
-  const meeting = getMeetingById(id);
-  if (!meeting) return { title: "Registration Not Found" };
-  return {
-    title: `Event Registration — ${meeting.title}`,
-    description: "Complete the form below to join the conference.",
-  };
-}
+export const metadata: Metadata = {
+  title: "Complete Payment",
+};
 
-export default async function RegisterPage({
+export default async function PaymentCheckoutPage({
   params,
   searchParams,
-}: RegisterPageProps) {
+}: PaymentCheckoutPageProps) {
   const { locale, id } = await params;
-  setRequestLocale(locale);
   const { plan } = await searchParams;
+  setRequestLocale(locale);
   const meeting = getMeetingById(id);
   if (!meeting) notFound();
+
+  const order = buildPendingOrder(meeting.title, plan);
 
   return (
     <main className="flex flex-1 flex-col">
       <DecorBackground className="min-h-[640px] py-14 md:py-20">
         <div className="container-content w-full">
-          <RegistrationForm meetingId={id} plan={plan} />
+          <PaymentCheckoutCard
+            meetingId={id}
+            order={order}
+            plan={plan}
+          />
         </div>
       </DecorBackground>
     </main>

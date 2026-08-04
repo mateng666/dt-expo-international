@@ -32,8 +32,8 @@ export default async function PaymentSuccessPage({
   };
 
   return (
-    <main className="flex-1">
-      <DecorBackground className="flex min-h-[640px] items-center py-14 md:py-20">
+    <main className="flex flex-1 flex-col">
+      <DecorBackground className="min-h-[640px] py-14 md:py-20">
         <div className="container-content w-full">
           <PaymentResultCard status="success" order={order} meetingId={id} />
         </div>

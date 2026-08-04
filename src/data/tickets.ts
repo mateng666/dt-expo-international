@@ -11,13 +11,13 @@ export const DEFAULT_TICKET_TIERS: TicketTier[] = [
   {
     id: "standard",
     name: "Standard",
-    price: "$199",
+    price: "USD 199",
     features: ["All keynotes & sessions", "Lunch & coffee", "Digital swag"],
   },
   {
     id: "pro",
     name: "Pro",
-    price: "$499",
+    price: "USD 499",
     features: [
       "Everything in Standard",
       "Priority seating",
@@ -30,7 +30,7 @@ export const DEFAULT_TICKET_TIERS: TicketTier[] = [
   {
     id: "vip",
     name: "VIP",
-    price: "$1,299",
+    price: "USD 1,299",
     features: [
       "Everything in Pro",
       "Speaker meet-and-greet",
@@ -55,6 +55,6 @@ export const TICKET_HERO_BY_MEETING: Record<
     description:
       "Google, Salt River Project (SRP) and Energy Dome announced a collaboration to explore how Energy Dome’s CO₂ Battery technology could support the development of non-lithium-ion long-duration energy storage solutions for SRP’s electric grid.",
     date: "17 Jun 2026",
-    region: "China",
+    region: "Singapore",
   },
 };

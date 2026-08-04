@@ -7,7 +7,7 @@ export default async function NotFound() {
 
   return (
     <main className="flex flex-1 flex-col">
-      <DecorBackground className="flex min-h-[640px] flex-1 items-center py-16 md:min-h-[720px]">
+      <DecorBackground className="min-h-[640px] py-16 md:min-h-[720px]">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-[radial-gradient(120%_80%_at_50%_100%,rgba(2,97,255,0.14)_0%,transparent_70%)]"

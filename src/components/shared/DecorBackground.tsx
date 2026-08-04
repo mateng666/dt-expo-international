@@ -9,7 +9,7 @@ interface DecorBackgroundProps {
 export function DecorBackground({ children, className = "" }: DecorBackgroundProps) {
   return (
     <section
-      className={`relative overflow-hidden bg-gradient-to-br from-[#EAF3FF] via-[#F5F9FF] to-[#EEF6FF] ${className}`}
+      className={`relative flex w-full flex-1 flex-col overflow-hidden bg-gradient-to-br from-[#EAF3FF] via-[#F5F9FF] to-[#EEF6FF] ${className}`}
     >
       <div
         aria-hidden
@@ -28,7 +28,9 @@ export function DecorBackground({ children, className = "" }: DecorBackgroundPro
         aria-hidden
         className="pointer-events-none absolute -right-16 top-[18%] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(56,189,248,0.28)_0%,rgba(2,97,255,0.08)_45%,transparent_70%)]"
       />
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex w-full flex-1 flex-col items-center justify-center">
+        {children}
+      </div>
     </section>
   );
 }

@@ -1,3 +1,5 @@
+import { SITE_CONTACT } from "@/data/site-contact";
+
 export interface CookieRow {
   name: string;
   purpose: string;
@@ -73,6 +75,6 @@ export const COOKIE_GROUPS: CookieGroup[] = [
 
 export const COOKIE_POLICY_META = {
   title: "Cookie Policy",
-  lastUpdated: "July 15, 2026",
-  contactEmail: "privacy@ditexpo.com",
+  lastUpdated: "August 3, 2026",
+  contactEmail: SITE_CONTACT.email,
 };

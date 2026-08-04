@@ -93,7 +93,7 @@ export function PaymentResultCard({
           href={
             isSuccess
               ? `/meetings/${meetingId}`
-              : `/meetings/${meetingId}/register`
+              : `/meetings/${meetingId}/payment`
           }
           className="inline-flex h-12 items-center justify-center rounded-[6px] bg-brand text-[16px] font-medium text-white transition hover:bg-[#0052db]"
         >

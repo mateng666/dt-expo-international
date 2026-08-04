@@ -5,11 +5,8 @@
     "siteName": "Eventnovas"
   },
   "Header": {
-    "region": "Region",
-    "meetingType": "Meeting Type",
     "ditexpo": "DITExpo",
     "searchPlaceholder": "Search conferences...",
-    "businessCooperation": "Business Cooperation",
     "loginRegister": "Log in / Register",
     "language": "Language",
     "langEn": "EN",
@@ -17,15 +14,17 @@
   },
   "Footer": {
     "tagline": "Eventnovas | Global Tech, New Connections — an international digital event platform for global tech exhibitions and conferences.",
+    "operatedBy": "Operated by",
     "browseByTopic": "Browse by Topic",
     "browseByRegion": "Browse by Region",
     "contactUs": "Contact Us",
-    "hours": "Mon–Fri 9:00–18:00 (GMT+8)",
+    "hours": "Mon–Fri 9:00–18:00 (SGT, GMT+8)",
     "customerSupport": "Customer Support",
-    "operations": "Operations",
-    "copyright": "© 2025 Eventnovas. All rights reserved.",
+    "compliance": "Compliance",
+    "copyright": "© 2026 Eventnovas / K Digital Service Pte. Ltd. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
+    "refund": "Refund Policy",
     "cookie": "Cookie Policy",
     "topics": {
       "aiChips": "AI & Chips",
@@ -94,6 +93,9 @@
   "Tickets": {
     "regionLabel": "Region",
     "register": "Register",
+    "continue": "Continue",
+    "selectHint": "Select a ticket type to continue. Prices are in US Dollars (USD).",
+    "selectRequired": "Please select a ticket first.",
     "bestValue": "Best value",
     "standard": "Standard",
     "pro": "Pro",
@@ -135,6 +137,13 @@
     }
   },
   "Payment": {
+    "checkoutTitle": "Complete Payment",
+    "checkoutSubtitle": "Your registration is saved. Please complete payment to confirm your ticket.",
+    "checkoutNote": "You will be redirected to Stripe Checkout to pay securely. Card details are processed by Stripe.",
+    "payNow": "Pay Now",
+    "changeTicket": "Change Ticket",
+    "ticketType": "Ticket Type",
+    "amountDue": "Amount Due",
     "successTitle": "Payment Successful",
     "successSubtitle": "Your registration has been confirmed successfully.",
     "failedTitle": "Payment Failed",
@@ -147,8 +156,8 @@
     "status": "Status",
     "completed": "Completed",
     "failed": "Failed",
-    "viewRegistration": "View Registration",
-    "tryAgain": "Try Again",
+    "viewRegistration": "View Event",
+    "tryAgain": "Try Payment Again",
     "backToHome": "Back to Home"
   },
   "Cookie": {

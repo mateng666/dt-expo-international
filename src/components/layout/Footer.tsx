@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { SOCIAL_ICONS } from "@/components/ui/SocialIcons";
+import { SITE_CONTACT } from "@/data/site-contact";
 import { Link } from "@/i18n/navigation";
 
 const unavailableClassName =
@@ -8,6 +9,9 @@ const unavailableClassName =
 
 export async function Footer() {
   const t = await getTranslations("Footer");
+  const locale = await getLocale();
+  const hours =
+    locale === "zh" ? SITE_CONTACT.hours.zh : SITE_CONTACT.hours.en;
 
   const topics = [
     t("topics.aiChips"),
@@ -16,22 +20,9 @@ export async function Footer() {
     t("topics.capitalFinance"),
   ];
 
-  const regions = [
-    t("regions.southeastAsia"),
-    t("regions.oceania"),
-    t("regions.latinAmerica"),
-    t("regions.northAmerica"),
-    t("regions.eastAsia"),
-    t("regions.centralAsia"),
-    t("regions.southAsia"),
-    t("regions.middleEast"),
-    t("regions.africa"),
-    t("regions.europe"),
-  ];
-
   return (
     <footer className="border-t border-border-footer bg-white">
-      <div className="container-content grid gap-10 py-[64px] md:grid-cols-2 xl:grid-cols-4">
+      <div className="container-content grid gap-10 py-[64px] md:grid-cols-2 xl:grid-cols-3">
         <div>
           <div className="flex items-center gap-2">
             <Image
@@ -46,6 +37,12 @@ export async function Footer() {
           </div>
           <p className="mt-4 max-w-[280px] text-[14px] leading-6 text-text-body">
             {t("tagline")}
+          </p>
+          <p className="mt-3 max-w-[320px] text-[13px] leading-5 text-text-muted">
+            {t("operatedBy")}: {SITE_CONTACT.companyName}
+          </p>
+          <p className="mt-1 max-w-[320px] text-[13px] leading-5 text-text-muted">
+            {SITE_CONTACT.address}
           </p>
           <div className="mt-5 flex items-center gap-3">
             {SOCIAL_ICONS.map(({ label, Icon }) => (
@@ -78,48 +75,61 @@ export async function Footer() {
         </div>
 
         <div>
-          <h3 className="text-[16px] font-semibold text-brand">
-            {t("browseByRegion")}
-          </h3>
-          <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5">
-            {regions.map((region) => (
-              <span
-                key={region}
-                aria-disabled="true"
-                className={unavailableClassName}
-              >
-                {region}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div>
           <h3 className="text-[16px] font-semibold text-brand">{t("contactUs")}</h3>
-          <p className="mt-4 text-[28px] font-semibold leading-none text-foreground">
-            010-51668499
-          </p>
-          <p className="mt-3 text-[14px] leading-6 text-text-body">{t("hours")}</p>
+          <a
+            href={SITE_CONTACT.phoneHref}
+            className="mt-4 block text-[28px] font-semibold leading-none text-foreground transition-colors hover:text-brand"
+          >
+            {SITE_CONTACT.phone}
+          </a>
+          <p className="mt-3 text-[14px] leading-6 text-text-body">{hours}</p>
           <p className="mt-3 text-[14px] leading-6 text-text-body">
-            {t("customerSupport")}: support@eventnovas.com
+            {t("customerSupport")}:{" "}
+            <a
+              href={`mailto:${SITE_CONTACT.email}`}
+              className="text-foreground hover:text-brand"
+            >
+              {SITE_CONTACT.email}
+            </a>
           </p>
           <p className="mt-1 text-[14px] leading-6 text-text-body">
-            {t("operations")}: ops@eventnovas.com
+            {t("compliance")}:{" "}
+            <a
+              href={`mailto:${SITE_CONTACT.complianceEmail}`}
+              className="text-foreground hover:text-brand"
+            >
+              {SITE_CONTACT.complianceEmail}
+            </a>
           </p>
         </div>
       </div>
 
       <div className="border-t border-border-footer">
-        <div className="container-content flex flex-col gap-3 py-5 text-[14px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>{t("copyright")}</p>
+        <div className="container-content flex flex-col gap-3 py-5 text-[14px] sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-text-muted">{t("copyright")}</p>
           <div className="flex flex-wrap gap-5">
-            <span aria-disabled="true" className={unavailableClassName}>
+            <Link
+              href="/privacy"
+              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
+            >
               {t("privacy")}
-            </span>
-            <span aria-disabled="true" className={unavailableClassName}>
+            </Link>
+            <Link
+              href="/terms"
+              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
+            >
               {t("terms")}
-            </span>
-            <Link href="/cookie-policy" className="hover:text-brand">
+            </Link>
+            <Link
+              href="/refund-policy"
+              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
+            >
+              {t("refund")}
+            </Link>
+            <Link
+              href="/cookie-policy"
+              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
+            >
               {t("cookie")}
             </Link>
           </div>

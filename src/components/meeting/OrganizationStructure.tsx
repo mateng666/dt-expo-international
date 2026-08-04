@@ -29,7 +29,7 @@ export async function OrganizationStructure({
           {items.map((item) => (
             <p key={item.label} className="text-justify">
               <span className="font-semibold">
-                {labelMap[item.label] ?? item.label}：
+                {labelMap[item.label] ?? item.label}:{" "}
               </span>
               {item.value}
             </p>

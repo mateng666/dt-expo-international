@@ -129,13 +129,13 @@ export function RegistrationForm({ meetingId, plan }: RegistrationFormProps) {
     setSubmitting(true);
     const params = new URLSearchParams();
     if (plan) params.set("plan", plan);
-    const demoFail =
-      new URLSearchParams(window.location.search).get("demo") === "fail";
-    const target = demoFail
-      ? `/meetings/${meetingId}/payment/failed`
-      : `/meetings/${meetingId}/payment/success`;
     const qs = params.toString();
-    router.push(qs ? `${target}?${qs}` : target);
+    // Create pending order → checkout. Real Stripe redirect comes after API wiring.
+    router.push(
+      qs
+        ? `/meetings/${meetingId}/payment?${qs}`
+        : `/meetings/${meetingId}/payment`,
+    );
   };
 
   return (

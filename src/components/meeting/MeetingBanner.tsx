@@ -47,7 +47,7 @@ export async function MeetingBanner({ meetingId, detail }: MeetingBannerProps) {
         <div className="container-content flex flex-col gap-3 px-4 py-3 text-[14px] text-white sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-10 md:text-[16px]">
           <span className="inline-flex items-center justify-center gap-2">
             <User className="h-4 w-4 shrink-0" strokeWidth={2} />
-            {t("contactPrefix")}：{detail.contact.name}
+            {t("contactPrefix")}: {detail.contact.name}
           </span>
           <span className="inline-flex items-center justify-center gap-2">
             <Phone className="h-4 w-4 shrink-0" strokeWidth={2} />
