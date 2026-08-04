@@ -1,0 +1,186 @@
+{
+  "Meta": {
+    "homeTitle": "Eventnovas | Global Tech, New Connections",
+    "homeDescription": "Eventnovas 面向全球科技类展览与会议打造一站式数字化会展平台，提供线上注册、智能签到、客商管理、线索采集与实时数据分析，推动全球科创精准对接。",
+    "siteName": "Eventnovas"
+  },
+  "Header": {
+    "region": "地区",
+    "meetingType": "会议类型",
+    "ditexpo": "DITExpo",
+    "searchPlaceholder": "搜索会议...",
+    "businessCooperation": "商务合作",
+    "loginRegister": "登录 / 注册",
+    "language": "语言",
+    "langEn": "EN",
+    "langZh": "中文"
+  },
+  "Footer": {
+    "tagline": "Eventnovas | Global Tech, New Connections — 面向全球科技展会与会议的一站式数字化会展平台。",
+    "browseByTopic": "按主题浏览",
+    "browseByRegion": "按地区浏览",
+    "contactUs": "联系我们",
+    "hours": "周一至周五 9:00–18:00（GMT+8）",
+    "customerSupport": "客户支持",
+    "operations": "运营审核",
+    "copyright": "© 2025 Eventnovas. 保留所有权利。",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "cookie": "Cookie 政策",
+    "topics": {
+      "aiChips": "AI 与芯片",
+      "dataCenters": "数据中心",
+      "energyPower": "能源电力",
+      "capitalFinance": "资本金融"
+    },
+    "regions": {
+      "southeastAsia": "东南亚",
+      "oceania": "大洋洲",
+      "latinAmerica": "拉丁美洲",
+      "northAmerica": "北美",
+      "eastAsia": "东亚",
+      "centralAsia": "中亚",
+      "southAsia": "南亚",
+      "middleEast": "中东",
+      "africa": "非洲",
+      "europe": "欧洲"
+    }
+  },
+  "Home": {
+    "latestMeetings": "最新会议",
+    "latestMeetingsDesc": "探索全球即将到来的科技展会与专业会议。",
+    "filters": {
+      "all": "全部",
+      "dataCenter": "数据中心",
+      "cloudService": "云服务",
+      "bigData": "大数据",
+      "itTechnology": "IT 技术",
+      "training": "培训",
+      "salon": "沙龙"
+    },
+    "stayConnected": "保持联系",
+    "newsletterDesc": "订阅我们的资讯，获取最新展会、行业趋势与洞察。",
+    "emailPlaceholder": "请输入您的邮箱",
+    "subscribe": "订阅",
+    "exploreMeetings": "探索会议",
+    "slides": {
+      "s1Eyebrow": "Global Tech, New Connections",
+      "s1Title": "Eventnovas 服务全球科技活动",
+      "s1Desc": "面向科技展会与会议的一站式数字化平台——覆盖注册、智能签到、数据管理与实时分析。",
+      "s1Side": "科技汇聚之地",
+      "s2Eyebrow": "Global Tech, New Connections",
+      "s2Title": "简化跨境活动运营",
+      "s2Desc": "支持多语种、跨时区与独立数据运营，服务科技博览会、峰会、创新论坛及混合活动。",
+      "s2Side": "全球运营",
+      "s3Eyebrow": "Global Tech, New Connections",
+      "s3Title": "实现精准商务对接",
+      "s3Desc": "打破地域边界，简化全流程运营，连接创新者、企业与投资者。",
+      "s3Side": "新商业连接"
+    }
+  },
+  "Meeting": {
+    "promoTag": "招商火热开启",
+    "register": "报名",
+    "contactPrefix": "详细咨询",
+    "exhibitionIntro": "展会介绍",
+    "exhibitionIntroEn": "EXHIBITION INTRODUCTION",
+    "orgStructure": "组织架构",
+    "orgStructureEn": "ORGANIZATIONAL STRUCTURE",
+    "host": "主办单位",
+    "organizer": "承办单位",
+    "execution": "执行单位",
+    "coOrganizer": "协办单位"
+  },
+  "Tickets": {
+    "regionLabel": "地区",
+    "register": "报名",
+    "bestValue": "最超值",
+    "standard": "标准票",
+    "pro": "专业票",
+    "vip": "贵宾票"
+  },
+  "Register": {
+    "title": "活动报名",
+    "subtitle": "填写以下表单完成会议报名。",
+    "fullName": "姓名",
+    "fullNamePh": "请输入您的姓名",
+    "company": "公司",
+    "companyPh": "请输入公司名称",
+    "phone": "手机号",
+    "phonePh": "请输入手机号码",
+    "email": "邮箱",
+    "emailPh": "请输入邮箱地址",
+    "region": "地区",
+    "regionPh": "请选择地区",
+    "attendance": "参会方式",
+    "inPerson": "线下参会",
+    "virtual": "线上参会",
+    "topics": "感兴趣的主题",
+    "topicsHint": "（可多选）",
+    "notes": "补充说明",
+    "notesOptional": "（选填）",
+    "notesPh": "如有其他需要说明的信息，请填写...",
+    "submit": "立即报名",
+    "submitting": "提交中...",
+    "backToEvents": "返回活动",
+    "errors": {
+      "fullName": "请输入您的姓名。",
+      "company": "请输入公司名称。",
+      "phone": "请输入手机号码。",
+      "phoneInvalid": "请输入有效的手机号码。",
+      "email": "请输入邮箱地址。",
+      "emailInvalid": "请输入有效的邮箱地址。",
+      "region": "请选择地区。",
+      "topics": "请至少选择一个感兴趣的主题。"
+    }
+  },
+  "Payment": {
+    "successTitle": "支付成功",
+    "successSubtitle": "您的报名已确认成功。",
+    "failedTitle": "支付失败",
+    "failedSubtitle": "未能完成报名支付，请检查支付信息后重试。",
+    "event": "活动",
+    "orderNo": "订单号",
+    "amountPaid": "支付金额",
+    "attemptedAmount": "尝试支付金额",
+    "paymentMethod": "支付方式",
+    "status": "状态",
+    "completed": "已完成",
+    "failed": "失败",
+    "viewRegistration": "查看报名",
+    "tryAgain": "重试",
+    "backToHome": "返回首页"
+  },
+  "Cookie": {
+    "bannerTitle": "我们使用 Cookie。",
+    "bannerBody": "我们使用 Cookie 以提升浏览体验、分析网站流量并支持支付功能。点击“全部接受”即表示您同意我们使用 Cookie。",
+    "learnMore": "了解更多",
+    "acceptAll": "全部接受",
+    "customize": "自定义",
+    "onlyNecessary": "仅必要",
+    "preferencesTitle": "Cookie 偏好设置",
+    "necessaryTitle": "始终启用必要 Cookie",
+    "necessaryDesc": "这些 Cookie 对网站正常运行至关重要，包括维持登录状态与保障支付安全，无法关闭。",
+    "preferenceTitle": "偏好 Cookie",
+    "preferenceDesc": "记住您的个性化选项，如语言偏好、主题设置等",
+    "analyticsTitle": "分析 Cookie",
+    "analyticsDesc": "帮助我们了解网站使用情况并优化体验，数据经匿名化处理",
+    "saveSettings": "保存设置",
+    "cancel": "取消"
+  },
+  "NotFound": {
+    "title": "抱歉，页面未找到",
+    "description": "您访问的页面可能已被移除、更名，或暂时不可用。",
+    "backHome": "返回首页",
+    "goBack": "返回上页"
+  },
+  "Status": {
+    "signingUp": "报名中",
+    "comingSoon": "即将开始",
+    "finished": "已结束"
+  },
+  "Common": {
+    "prevSlide": "上一张",
+    "nextSlide": "下一张"
+  }
+}

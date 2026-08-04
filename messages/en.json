@@ -1,0 +1,186 @@
+{
+  "Meta": {
+    "homeTitle": "Eventnovas | Global Tech, New Connections",
+    "homeDescription": "Eventnovas is a global all-in-one digital platform for technology exhibitions and conferences. End-to-end tools for branded registration, smart check-in, attendee data, lead capture and real-time analytics.",
+    "siteName": "Eventnovas"
+  },
+  "Header": {
+    "region": "Region",
+    "meetingType": "Meeting Type",
+    "ditexpo": "DITExpo",
+    "searchPlaceholder": "Search conferences...",
+    "businessCooperation": "Business Cooperation",
+    "loginRegister": "Log in / Register",
+    "language": "Language",
+    "langEn": "EN",
+    "langZh": "中文"
+  },
+  "Footer": {
+    "tagline": "Eventnovas | Global Tech, New Connections — an international digital event platform for global tech exhibitions and conferences.",
+    "browseByTopic": "Browse by Topic",
+    "browseByRegion": "Browse by Region",
+    "contactUs": "Contact Us",
+    "hours": "Mon–Fri 9:00–18:00 (GMT+8)",
+    "customerSupport": "Customer Support",
+    "operations": "Operations",
+    "copyright": "© 2025 Eventnovas. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookie": "Cookie Policy",
+    "topics": {
+      "aiChips": "AI & Chips",
+      "dataCenters": "Data Centers",
+      "energyPower": "Energy & Power",
+      "capitalFinance": "Capital & Finance"
+    },
+    "regions": {
+      "southeastAsia": "Southeast Asia",
+      "oceania": "Oceania",
+      "latinAmerica": "Latin America",
+      "northAmerica": "North America",
+      "eastAsia": "East Asia",
+      "centralAsia": "Central Asia",
+      "southAsia": "South Asia",
+      "middleEast": "Middle East",
+      "africa": "Africa",
+      "europe": "Europe"
+    }
+  },
+  "Home": {
+    "latestMeetings": "Latest Meetings",
+    "latestMeetingsDesc": "Explore upcoming conferences and meetings from around the world.",
+    "filters": {
+      "all": "All",
+      "dataCenter": "Data center",
+      "cloudService": "Cloud Service",
+      "bigData": "Big data",
+      "itTechnology": "IT Technology",
+      "training": "Training",
+      "salon": "Salon"
+    },
+    "stayConnected": "Stay Connected",
+    "newsletterDesc": "Subscribe to our newsletter for the latest conferences, trends, and industry insights.",
+    "emailPlaceholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "exploreMeetings": "Explore Meetings",
+    "slides": {
+      "s1Eyebrow": "Global Tech, New Connections",
+      "s1Title": "Eventnovas for Global Tech Events",
+      "s1Desc": "A global all-in-one digital platform for technology exhibitions and conferences — registration, smart check-in, data management and real-time analytics.",
+      "s1Side": "Where Tech Converges",
+      "s2Eyebrow": "Global Tech, New Connections",
+      "s2Title": "Streamline Cross-Border Events",
+      "s2Desc": "Multi-language interfaces, global time zones and independent data operation for tech expos, summits, innovation forums and hybrid events.",
+      "s2Side": "Operate Worldwide",
+      "s3Eyebrow": "Global Tech, New Connections",
+      "s3Title": "Enable Precise Matchmaking",
+      "s3Desc": "Break geographic barriers, simplify full-lifecycle operations, and connect innovators, enterprises and investors worldwide.",
+      "s3Side": "New Business Links"
+    }
+  },
+  "Meeting": {
+    "promoTag": "Investment Promotion Open",
+    "register": "Register",
+    "contactPrefix": "Contact",
+    "exhibitionIntro": "Exhibition Introduction",
+    "exhibitionIntroEn": "EXHIBITION INTRODUCTION",
+    "orgStructure": "Organizational Structure",
+    "orgStructureEn": "ORGANIZATIONAL STRUCTURE",
+    "host": "Host Units",
+    "organizer": "Organizer",
+    "execution": "Execution Unit",
+    "coOrganizer": "Co-organizer"
+  },
+  "Tickets": {
+    "regionLabel": "Region",
+    "register": "Register",
+    "bestValue": "Best value",
+    "standard": "Standard",
+    "pro": "Pro",
+    "vip": "VIP"
+  },
+  "Register": {
+    "title": "Event Registration",
+    "subtitle": "Complete the form below to join the conference.",
+    "fullName": "Full Name",
+    "fullNamePh": "Enter your full name",
+    "company": "Company",
+    "companyPh": "Enter your company name",
+    "phone": "Phone Number",
+    "phonePh": "Enter your phone number",
+    "email": "Email Address",
+    "emailPh": "Enter your email address",
+    "region": "Region",
+    "regionPh": "Select your region",
+    "attendance": "Attendance Type",
+    "inPerson": "In-Person",
+    "virtual": "Virtual",
+    "topics": "Interested Topics",
+    "topicsHint": "(Select all that apply)",
+    "notes": "Additional Notes",
+    "notesOptional": "(Optional)",
+    "notesPh": "Share anything else we should know...",
+    "submit": "Register Now",
+    "submitting": "Submitting...",
+    "backToEvents": "Back to Events",
+    "errors": {
+      "fullName": "Please enter your full name.",
+      "company": "Please enter your company name.",
+      "phone": "Please enter your phone number.",
+      "phoneInvalid": "Please enter a valid phone number.",
+      "email": "Please enter your email address.",
+      "emailInvalid": "Please enter a valid email address.",
+      "region": "Please select your region.",
+      "topics": "Please select at least one interested topic."
+    }
+  },
+  "Payment": {
+    "successTitle": "Payment Successful",
+    "successSubtitle": "Your registration has been confirmed successfully.",
+    "failedTitle": "Payment Failed",
+    "failedSubtitle": "We were unable to complete your registration payment. Please check your payment information and try again.",
+    "event": "Event",
+    "orderNo": "Order No.",
+    "amountPaid": "Amount Paid",
+    "attemptedAmount": "Attempted Amount",
+    "paymentMethod": "Payment Method",
+    "status": "Status",
+    "completed": "Completed",
+    "failed": "Failed",
+    "viewRegistration": "View Registration",
+    "tryAgain": "Try Again",
+    "backToHome": "Back to Home"
+  },
+  "Cookie": {
+    "bannerTitle": "We use cookies.",
+    "bannerBody": "We use cookies to enhance your browsing experience, analyze website traffic and support payment functions. By clicking \"Accept All\" you consent to our use of cookies.",
+    "learnMore": "Learn more",
+    "acceptAll": "Accept All",
+    "customize": "Customize",
+    "onlyNecessary": "Only necessary",
+    "preferencesTitle": "Cookie Preferences",
+    "necessaryTitle": "Always enable necessary cookies",
+    "necessaryDesc": "These cookies are essential for the normal operation of the website, including maintaining login status and ensuring payment security, and cannot be disabled.",
+    "preferenceTitle": "Preference Cookies",
+    "preferenceDesc": "Remember your personalized options such as language preferences, theme settings, etc",
+    "analyticsTitle": "Analyze Cookie",
+    "analyticsDesc": "Help us understand how the website is used and optimize user experience. Data is processed via anonymization",
+    "saveSettings": "Save settings",
+    "cancel": "Cancel"
+  },
+  "NotFound": {
+    "title": "Oops! Page Not Found",
+    "description": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "backHome": "Back to Home",
+    "goBack": "Go Back"
+  },
+  "Status": {
+    "signingUp": "Signing Up",
+    "comingSoon": "Coming Soon",
+    "finished": "Finished"
+  },
+  "Common": {
+    "prevSlide": "Previous slide",
+    "nextSlide": "Next slide"
+  }
+}
