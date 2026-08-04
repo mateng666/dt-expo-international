@@ -3,6 +3,9 @@ import { getTranslations } from "next-intl/server";
 import { SOCIAL_ICONS } from "@/components/ui/SocialIcons";
 import { Link } from "@/i18n/navigation";
 
+const unavailableClassName =
+  "cursor-not-allowed text-[14px] text-text-muted/60 select-none";
+
 export async function Footer() {
   const t = await getTranslations("Footer");
 
@@ -46,14 +49,15 @@ export async function Footer() {
           </p>
           <div className="mt-5 flex items-center gap-3">
             {SOCIAL_ICONS.map(({ label, Icon }) => (
-              <a
+              <span
                 key={label}
-                href="#"
                 aria-label={label}
-                className="text-[#333] transition hover:text-brand"
+                aria-disabled="true"
+                title="Coming soon"
+                className="cursor-not-allowed text-text-muted/50"
               >
                 <Icon className="h-4 w-4" />
-              </a>
+              </span>
             ))}
           </div>
         </div>
@@ -65,12 +69,9 @@ export async function Footer() {
           <ul className="mt-4 space-y-2.5">
             {topics.map((topic) => (
               <li key={topic}>
-                <Link
-                  href="/"
-                  className="text-[14px] text-text-body transition hover:text-brand"
-                >
+                <span aria-disabled="true" className={unavailableClassName}>
                   {topic}
-                </Link>
+                </span>
               </li>
             ))}
           </ul>
@@ -82,13 +83,13 @@ export async function Footer() {
           </h3>
           <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5">
             {regions.map((region) => (
-              <Link
+              <span
                 key={region}
-                href="/"
-                className="text-[14px] text-text-body transition hover:text-brand"
+                aria-disabled="true"
+                className={unavailableClassName}
               >
                 {region}
-              </Link>
+              </span>
             ))}
           </div>
         </div>
@@ -112,12 +113,12 @@ export async function Footer() {
         <div className="container-content flex flex-col gap-3 py-5 text-[14px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>{t("copyright")}</p>
           <div className="flex flex-wrap gap-5">
-            <Link href="/" className="hover:text-brand">
+            <span aria-disabled="true" className={unavailableClassName}>
               {t("privacy")}
-            </Link>
-            <Link href="/" className="hover:text-brand">
+            </span>
+            <span aria-disabled="true" className={unavailableClassName}>
               {t("terms")}
-            </Link>
+            </span>
             <Link href="/cookie-policy" className="hover:text-brand">
               {t("cookie")}
             </Link>

@@ -31,14 +31,15 @@ export function Newsletter() {
           </p>
           <div className="mt-5 flex items-center gap-3">
             {SOCIAL_ICONS.map(({ label, Icon }) => (
-              <a
+              <span
                 key={label}
-                href="#"
                 aria-label={label}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#333] shadow-[0_4px_20px_rgba(0,0,0,0.06)] transition hover:text-brand"
+                aria-disabled="true"
+                title="Coming soon"
+                className="flex h-10 w-10 cursor-not-allowed items-center justify-center rounded-full bg-white text-text-muted/50 shadow-[0_4px_20px_rgba(0,0,0,0.06)]"
               >
                 <Icon className="h-4 w-4" />
-              </a>
+              </span>
             ))}
           </div>
         </div>
