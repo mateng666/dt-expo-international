@@ -1,9 +1,11 @@
 # Cloudflare OpenNext 部署记录（Next.js 16 App Router）
 
-本文记录 `dt-expo-international`（CircleMeet 国际版前台）部署到 Cloudflare Workers 时的配置。  
+本文记录 `dt-expo-international`（CircleMeet 国际版前台）部署到 Cloudflare Workers 时的配置，以及本次实际上线踩坑项。  
 技术路径为 **`@opennextjs/cloudflare`（OpenNext）**，不是已废弃的 `@cloudflare/next-on-pages`。
 
 对照旧项目 `slhy-website`《Cloudflare Pages 部署记录》：该记录面向 Next.js 14 Pages Router + Pages；本仓库为 Next.js 16 App Router，官方适配已切换到 Workers + OpenNext。
+
+创建 Worker 时选 **Create Worker → Continue with GitHub**，不要点底部「想要部署 Pages?」。
 
 ## Cloudflare 配置
 
@@ -81,9 +83,101 @@ Cloudflare Workers Builds 建议：
 | --- | --- |
 | Build command | `pnpm exec opennextjs-cloudflare build` |
 | Deploy command | `pnpm exec wrangler deploy`（或 `pnpm exec opennextjs-cloudflare deploy`） |
-| Node.js | 22（由 `.node-version` 指定） |
+| Node.js | 22（由 `.node-version` 指定；控制台不要手动锁成 20） |
 
 说明：平台会先自动跑一次 `pnpm install --frozen-lockfile`，构建命令里不必再写 `pnpm install`。
+
+## 自定义域绑定（eventnovas.com）
+
+绑定入口（正确）：
+
+1. **Workers 与 Pages** → 打开 Worker `dt-expo-international`
+2. **设置 → 域和路由 / 自定义域** → 添加 `eventnovas.com`
+
+**不是**域名下的「Workers 路由」空列表页（那是给已有 Zone 配 `域名/* → Worker` 规则用的）。
+
+若添加自定义域时报：
+
+```text
+Hostname 'eventnovas.com' already has externally managed DNS records (A, CNAME, etc).
+Delete them first or try a different hostname.
+```
+
+说明该主机名上已有冲突 DNS，需先清理再绑定：
+
+1. Cloudflare 域名列表 → `eventnovas.com` → **配置 DNS**（不是 SSL/TLS）
+2. 按需删除冲突记录后再回 Worker 添加自定义域
+
+| 记录类型 | 名称示例 | 处理 |
+| --- | --- | --- |
+| A / AAAA | `eventnovas.com`（或 `@`） | **必须删除**（常见旧站/转发 IP，即冲突主因） |
+| CNAME | `www` | 若 `www` 也要挂到本 Worker：**可删**；绑定成功后再在自定义域添加 `www.eventnovas.com` |
+| CNAME | `_domainconnect…` | 非冲突主因，可留可删 |
+| TXT | `_dmarc…` | **保留**（邮件策略，与 Worker 无关） |
+
+删除根域名 A/CNAME 前确认旧站可下线；绑定成功后 Cloudflare 通常会自动写入指向 Worker 的新记录。DNS 生效可能需要数分钟。
+
+## 本次踩坑记录
+
+### 1. pnpm lockfile 与 CI 不兼容
+
+**现象：**
+
+```text
+Ignoring not compatible lockfile at .../pnpm-lock.yaml
+ERR_PNPM_NO_LOCKFILE  Cannot install with "frozen-lockfile" because pnpm-lock.yaml is absent
+```
+
+**原因：** 本地曾用 pnpm 8 生成 `lockfileVersion: '6.0'`，Cloudflare Builds 使用 pnpm 10.11.1，会忽略旧 lockfile，再按 `--frozen-lockfile` 安装即失败。
+
+**处理：**
+
+- 用与 CI 一致的 pnpm 10 重生成 lockfile（现为 `lockfileVersion: '9.0'`）
+- `package.json` 固定 `"packageManager": "pnpm@10.11.1"`
+- 本地可用 `pnpm install --frozen-lockfile` 自检
+
+### 2. 构建成功但部署失败：Node 版本过低
+
+**现象：** OpenNext 已 `OpenNext build complete`，随后：
+
+```text
+Executing user deploy command: npx wrangler deploy
+Wrangler requires at least Node.js v22.0.0. You are using v20.20.2.
+```
+
+**原因：** Wrangler 4 要求 Node ≥ 22；仅把 Node 设为 20（或旧文档习惯）会导致「构建过、部署挂」。
+
+**处理：**
+
+- `.node-version` 设为 `22`
+- Cloudflare 构建环境不要手动覆盖为 Node 20
+- Deploy 使用 `pnpm exec wrangler deploy`（与项目内 wrangler 一致）
+
+### 3. 构建命令重复 install
+
+平台已自动执行 `pnpm install --frozen-lockfile`。用户构建命令写成 `pnpm install && pnpm exec opennextjs-cloudflare build` 虽不一定失败，但多余；建议构建命令只保留 OpenNext build。
+
+### 4. 自定义域绑错入口 / DNS 冲突
+
+见上文「自定义域绑定」。要点：
+
+- 用 Worker 的 **自定义域**，不要只在「Workers 路由」页操作
+- 先删根域名冲突 A（及需要时的 www CNAME），再添加域名
+- 保留 `_dmarc` 等无关 TXT
+
+### 5. 本机 Windows 无法完成 OpenNext 打包
+
+见上文「本地验证」。CI（Linux）可正常完成 OpenNext bundle；原生 Windows 可能在复制 `open-next.config.edge.mjs` 时 ENOENT。
+
+### 6. Next 对 middleware 的弃用提示
+
+构建日志可能出现：
+
+```text
+The "middleware" file convention is deprecated. Please use "proxy" instead.
+```
+
+本项目**仍使用** `src/middleware.ts`：OpenNext 对 Next 16 `proxy` 支持不完整。该警告可忽略，不要为消警告改回 `proxy.ts` 除非确认 OpenNext 已支持。
 
 ## 部署后检查
 
