@@ -1,37 +1,30 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { ChevronDown } from "lucide-react";
-import { INTEREST_TOPICS, REGIONS } from "@/data/payment";
 import { Link, useRouter } from "@/i18n/navigation";
+import { ApiError } from "@/lib/api";
+import {
+  PARTICIPANT_EMAIL_FIELD_ID,
+  parseFormMeta,
+  type PortalFormField,
+} from "@/lib/form-meta";
+import {
+  createOrder,
+  fetchFormMeta,
+  fetchTicketChannel,
+} from "@/lib/intl-api";
+import { getClientToken, goUserCenterLogin } from "@/lib/session";
+import { toUserFacingError } from "@/lib/user-facing-error";
 
 interface RegistrationFormProps {
   meetingId: string;
   plan?: string;
+  channelId?: string;
+  childExpoId?: string;
+  inviteCodeId?: string;
 }
-
-type FieldKey =
-  | "fullName"
-  | "company"
-  | "phone"
-  | "email"
-  | "region"
-  | "topics";
-
-type FormValues = {
-  fullName: string;
-  company: string;
-  phone: string;
-  email: string;
-  region: string;
-  notes: string;
-};
-
-type FormErrors = Partial<Record<FieldKey, string>>;
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_RE = /^[+]?[\d\s()-]{6,20}$/;
 
 function inputClass(hasError: boolean) {
   return `mt-2 h-12 w-full rounded-[8px] border bg-white px-4 text-[15px] text-foreground outline-none transition placeholder:text-text-placeholder ${
@@ -46,97 +39,201 @@ function FieldError({ message }: { message?: string }) {
   return <p className="mt-1.5 text-[12px] leading-4 text-[#EF4444]">{message}</p>;
 }
 
-export function RegistrationForm({ meetingId, plan }: RegistrationFormProps) {
+function absoluteUrl(path: string) {
+  if (typeof window === "undefined") return path;
+  return `${window.location.origin}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+function htmlInputType(kind: PortalFormField["kind"]) {
+  if (kind === "email") return "email";
+  if (kind === "tel") return "tel";
+  if (kind === "number") return "number";
+  if (kind === "url") return "url";
+  if (kind === "date") return "datetime-local";
+  return "text";
+}
+
+export function RegistrationForm({
+  meetingId,
+  plan,
+  channelId: channelIdProp,
+  childExpoId,
+  inviteCodeId,
+}: RegistrationFormProps) {
   const t = useTranslations("Register");
+  const locale = useLocale();
   const router = useRouter();
-  const [attendance, setAttendance] = useState<"in-person" | "virtual">(
-    "in-person",
-  );
-  const [topics, setTopics] = useState<string[]>([]);
-  const [values, setValues] = useState<FormValues>({
-    fullName: "",
-    company: "",
-    phone: "",
-    email: "",
-    region: "",
-    notes: "",
-  });
-  const [errors, setErrors] = useState<FormErrors>({});
+
+  const [channelId, setChannelId] = useState(channelIdProp);
+  const [planName, setPlanName] = useState<string>();
+  const [fields, setFields] = useState<PortalFormField[]>([]);
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loadError, setLoadError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [submitError, setSubmitError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const setField = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
-    setValues((prev) => ({ ...prev, [key]: value }));
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setLoadError("");
+
+    (async () => {
+      try {
+        // 浏览器可见：票种 + 表单元数据
+        const channel = await fetchTicketChannel({
+          expoId: Number(meetingId),
+          channelId: channelIdProp ? Number(channelIdProp) : undefined,
+          server: false,
+        });
+        if (cancelled) return;
+        setChannelId(String(channel.channelId));
+        if (plan) {
+          setPlanName(channel.tiers.find((x) => x.id === plan)?.name);
+        }
+        const meta = await fetchFormMeta(channel.channelId, false);
+        if (cancelled) return;
+        const parsed = parseFormMeta(meta, locale);
+        setFields(parsed);
+        const next: Record<string, string> = {};
+        for (const f of parsed) next[f.id] = "";
+        setValues(next);
+      } catch (err) {
+        if (!cancelled) {
+          setLoadError(toUserFacingError(err, t("errors.loadForm")));
+          setFields([]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [meetingId, channelIdProp, plan, locale, t]);
+
+  const planValid = useMemo(() => Boolean(plan && /^\d+$/.test(plan)), [plan]);
+
+  const setField = (id: string, value: string) => {
+    setValues((prev) => ({ ...prev, [id]: value }));
     setErrors((prev) => {
-      if (!prev[key as FieldKey]) return prev;
+      if (!prev[id]) return prev;
       const next = { ...prev };
-      delete next[key as FieldKey];
+      delete next[id];
       return next;
     });
   };
 
-  const toggleTopic = (topic: string) => {
-    setTopics((prev) =>
-      prev.includes(topic) ? prev.filter((t) => t !== topic) : [...prev, topic],
-    );
-    setErrors((prev) => {
-      if (!prev.topics) return prev;
-      const next = { ...prev };
-      delete next.topics;
-      return next;
-    });
-  };
-
-  const validate = (): FormErrors => {
-    const next: FormErrors = {};
-
-    if (!values.fullName.trim()) {
-      next.fullName = t("errors.fullName");
+  const validate = (): Record<string, string> => {
+    const next: Record<string, string> = {};
+    if (!planValid) next._plan = t("errors.plan");
+    for (const field of fields) {
+      const raw = (values[field.id] || "").trim();
+      if (field.required && !raw) {
+        next[field.id] = t("errors.required", { field: field.name });
+        continue;
+      }
+      if (field.maxLength && raw.length > field.maxLength) {
+        next[field.id] = t("errors.maxLength", {
+          field: field.name,
+          max: field.maxLength,
+        });
+      }
+      if (field.kind === "email" && raw && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
+        next[field.id] = t("errors.emailInvalid");
+      }
     }
-
-    if (!values.company.trim()) {
-      next.company = t("errors.company");
-    }
-
-    if (!values.phone.trim()) {
-      next.phone = t("errors.phone");
-    } else if (!PHONE_RE.test(values.phone.trim())) {
-      next.phone = t("errors.phoneInvalid");
-    }
-
-    if (!values.email.trim()) {
-      next.email = t("errors.email");
-    } else if (!EMAIL_RE.test(values.email.trim())) {
-      next.email = t("errors.emailInvalid");
-    }
-
-    if (!values.region) {
-      next.region = t("errors.region");
-    }
-
-    if (topics.length === 0) {
-      next.topics = t("errors.topics");
-    }
-
     return next;
   };
 
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmitError("");
     const nextErrors = validate();
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
+    if (!getClientToken()) {
+      goUserCenterLogin();
+      return;
+    }
+
     setSubmitting(true);
-    const params = new URLSearchParams();
-    if (plan) params.set("plan", plan);
-    const qs = params.toString();
-    // Create pending order → checkout. Real Stripe redirect comes after API wiring.
-    router.push(
-      qs
-        ? `/meetings/${meetingId}/payment?${qs}`
-        : `/meetings/${meetingId}/payment`,
-    );
+    try {
+      const payload: Record<string, string> = {};
+      for (const field of fields) {
+        if (field.synthetic || field.id === PARTICIPANT_EMAIL_FIELD_ID) continue;
+        payload[field.id] = (values[field.id] || "").trim();
+      }
+      const nameField =
+        fields.find((f) => f.isName) ||
+        fields.find((f) => f.name.includes("姓名") || /name/i.test(f.name));
+      const emailField =
+        fields.find((f) => f.isEmail) ||
+        fields.find((f) => f.kind === "email");
+      const participantEmail = emailField
+        ? (values[emailField.id] || "").trim()
+        : undefined;
+
+      const result = await createOrder({
+        e: Number(meetingId),
+        c: channelId ? Number(channelId) : undefined,
+        m: childExpoId ? Number(childExpoId) : undefined,
+        i: inviteCodeId ? Number(inviteCodeId) : undefined,
+        ticketTypeId: Number(plan),
+        inviteCodeId: inviteCodeId ? Number(inviteCodeId) : undefined,
+        participantName: nameField
+          ? (values[nameField.id] || "").trim()
+          : undefined,
+        participantEmail,
+        formPayloadJson: JSON.stringify(payload),
+        successUrl: absoluteUrl(`/en/meetings/${meetingId}/payment/success`),
+        cancelUrl: absoluteUrl(`/en/meetings/${meetingId}/payment/failed`),
+      });
+
+      if (result.zero) {
+        router.push(
+          `/meetings/${meetingId}/payment/success?orderSn=${encodeURIComponent(result.orderSn)}`,
+        );
+        return;
+      }
+      if (result.checkoutUrl) {
+        window.location.href = result.checkoutUrl;
+        return;
+      }
+      router.push(
+        `/meetings/${meetingId}/payment?orderSn=${encodeURIComponent(result.orderSn)}`,
+      );
+    } catch (err) {
+      if (
+        err instanceof ApiError &&
+        (err.code === 401 || err.errorCode === "UNAUTHORIZED")
+      ) {
+        goUserCenterLogin();
+        return;
+      }
+      setSubmitError(toUserFacingError(err, t("errors.submit")));
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (!planValid) {
+    return (
+      <div className="mx-auto w-full max-w-[640px] rounded-[16px] bg-white px-6 py-10 text-center shadow-[0_8px_32px_rgba(0,0,0,0.08)] sm:px-10">
+        <h1 className="text-[28px] font-bold text-[#0B1F44]">{t("title")}</h1>
+        <p className="mt-3 text-[15px] text-[#EF4444]">{t("errors.plan")}</p>
+        <Link
+          href={`/meetings/${meetingId}/tickets`}
+          className="mt-6 inline-flex h-11 items-center justify-center rounded-[6px] bg-brand px-6 text-[15px] font-medium text-white"
+        >
+          {t("backToTickets")}
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form
@@ -147,170 +244,116 @@ export function RegistrationForm({ meetingId, plan }: RegistrationFormProps) {
       <div className="text-center">
         <h1 className="text-[32px] font-bold text-[#0B1F44]">{t("title")}</h1>
         <p className="mt-2 text-[15px] text-text-muted">{t("subtitle")}</p>
+        {planName ? (
+          <p className="mt-3 text-[14px] font-medium text-brand">
+            {t("selectedPlan")}: {planName}
+          </p>
+        ) : null}
       </div>
 
-      <div className="mt-8 space-y-5">
-        <label className="block">
-          <span className="text-[14px] font-medium text-foreground">{t("fullName")}</span>
-          <input
-            name="fullName"
-            value={values.fullName}
-            onChange={(e) => setField("fullName", e.target.value)}
-            placeholder={t("fullNamePh")}
-            aria-invalid={Boolean(errors.fullName)}
-            className={inputClass(Boolean(errors.fullName))}
-          />
-          <FieldError message={errors.fullName} />
-        </label>
-
-        <label className="block">
-          <span className="text-[14px] font-medium text-foreground">{t("company")}</span>
-          <input
-            name="company"
-            value={values.company}
-            onChange={(e) => setField("company", e.target.value)}
-            placeholder={t("companyPh")}
-            aria-invalid={Boolean(errors.company)}
-            className={inputClass(Boolean(errors.company))}
-          />
-          <FieldError message={errors.company} />
-        </label>
-
-        <label className="block">
-          <span className="text-[14px] font-medium text-foreground">{t("phone")}</span>
-          <input
-            name="phone"
-            type="tel"
-            value={values.phone}
-            onChange={(e) => setField("phone", e.target.value)}
-            placeholder={t("phonePh")}
-            aria-invalid={Boolean(errors.phone)}
-            className={inputClass(Boolean(errors.phone))}
-          />
-          <FieldError message={errors.phone} />
-        </label>
-
-        <label className="block">
-          <span className="text-[14px] font-medium text-foreground">{t("email")}</span>
-          <input
-            name="email"
-            type="email"
-            value={values.email}
-            onChange={(e) => setField("email", e.target.value)}
-            placeholder={t("emailPh")}
-            aria-invalid={Boolean(errors.email)}
-            className={inputClass(Boolean(errors.email))}
-          />
-          <FieldError message={errors.email} />
-        </label>
-
-        <label className="block">
-          <span className="text-[14px] font-medium text-foreground">{t("region")}</span>
-          <div className="relative mt-2">
-            <select
-              name="region"
-              value={values.region}
-              onChange={(e) => setField("region", e.target.value)}
-              aria-invalid={Boolean(errors.region)}
-              className={`${inputClass(Boolean(errors.region))} mt-0 appearance-none pr-10`}
-            >
-              <option value="" disabled>
-                {t("regionPh")}
-              </option>
-              {REGIONS.map((region) => (
-                <option key={region} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 ${
-                errors.region ? "text-[#EF4444]" : "text-text-muted"
-              }`}
-            />
-          </div>
-          <FieldError message={errors.region} />
-        </label>
-
-        <fieldset>
-          <legend className="text-[14px] font-medium text-foreground">
-            {t("attendance")}
-          </legend>
-          <div className="mt-2 grid grid-cols-2 gap-3">
-            {(
-              [
-                ["in-person", t("inPerson")],
-                ["virtual", t("virtual")],
-              ] as const
-            ).map(([value, label]) => {
-              const active = attendance === value;
+      {loading ? (
+        <p className="mt-10 text-center text-[14px] text-text-muted">
+          {t("loadingForm")}
+        </p>
+      ) : loadError ? (
+        <p className="mt-10 text-center text-[14px] text-[#EF4444]">{loadError}</p>
+      ) : (
+        <div className="mt-8 space-y-5">
+          {fields.length === 0 ? (
+            <p className="text-center text-[14px] text-text-muted">
+              {t("noFields")}
+            </p>
+          ) : (
+            fields.map((field) => {
+              const err = errors[field.id];
+              if (field.kind === "textarea") {
+                return (
+                  <label key={field.id} className="block">
+                    <span className="text-[14px] font-medium text-foreground">
+                      {field.name}
+                      {field.required ? (
+                        <span className="text-[#EF4444]"> *</span>
+                      ) : null}
+                    </span>
+                    <textarea
+                      value={values[field.id] || ""}
+                      onChange={(e) => setField(field.id, e.target.value)}
+                      placeholder={field.placeholder}
+                      rows={4}
+                      maxLength={field.maxLength}
+                      className="mt-2 w-full resize-none rounded-[8px] border border-border-soft bg-white px-4 py-3 text-[15px] outline-none focus:border-brand"
+                    />
+                    <FieldError message={err} />
+                  </label>
+                );
+              }
+              if (field.kind === "select") {
+                return (
+                  <label key={field.id} className="block">
+                    <span className="text-[14px] font-medium text-foreground">
+                      {field.name}
+                      {field.required ? (
+                        <span className="text-[#EF4444]"> *</span>
+                      ) : null}
+                    </span>
+                    <div className="relative mt-2">
+                      <select
+                        value={values[field.id] || ""}
+                        onChange={(e) => setField(field.id, e.target.value)}
+                        className={`${inputClass(Boolean(err))} mt-0 appearance-none pr-10`}
+                      >
+                        <option value="" disabled>
+                          {field.placeholder}
+                        </option>
+                        {(field.options || []).map((opt) => (
+                          <option key={opt.id} value={opt.id}>
+                            {opt.name}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+                    </div>
+                    <FieldError message={err} />
+                  </label>
+                );
+              }
               return (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setAttendance(value)}
-                  className={`h-12 rounded-[8px] border text-[15px] font-medium transition ${
-                    active
-                      ? "border-brand bg-[#E8F1FF] text-brand"
-                      : "border-border-soft bg-white text-text-body hover:border-brand/40"
-                  }`}
-                >
-                  {label}
-                </button>
+                <label key={field.id} className="block">
+                  <span className="text-[14px] font-medium text-foreground">
+                    {field.name}
+                    {field.required ? (
+                      <span className="text-[#EF4444]"> *</span>
+                    ) : null}
+                  </span>
+                  <input
+                    type={htmlInputType(field.kind)}
+                    value={values[field.id] || ""}
+                    onChange={(e) => setField(field.id, e.target.value)}
+                    placeholder={field.placeholder}
+                    maxLength={field.maxLength}
+                    aria-invalid={Boolean(err)}
+                    className={inputClass(Boolean(err))}
+                  />
+                  <FieldError message={err} />
+                </label>
               );
-            })}
-          </div>
-          <input type="hidden" name="attendance" value={attendance} />
-        </fieldset>
+            })
+          )}
+        </div>
+      )}
 
-        <fieldset>
-          <legend className="text-[14px] font-medium text-foreground">
-            {t("topics")}{" "}
-            <span className="font-normal text-text-muted">{t("topicsHint")}</span>
-          </legend>
-          <div className="mt-2 grid grid-cols-2 gap-3">
-            {INTEREST_TOPICS.map((topic) => {
-              const active = topics.includes(topic);
-              return (
-                <button
-                  key={topic}
-                  type="button"
-                  onClick={() => toggleTopic(topic)}
-                  className={`h-12 rounded-[8px] border text-[15px] font-medium transition ${
-                    active
-                      ? "border-brand bg-[#E8F1FF] text-brand"
-                      : errors.topics
-                        ? "border-[#EF4444] bg-white text-text-body"
-                        : "border-border-soft bg-white text-text-body hover:border-brand/40"
-                  }`}
-                >
-                  {topic}
-                </button>
-              );
-            })}
-          </div>
-          <FieldError message={errors.topics} />
-        </fieldset>
-
-        <label className="block">
-          <span className="text-[14px] font-medium text-foreground">
-            {t("notes")}{" "}
-            <span className="font-normal text-text-muted">{t("notesOptional")}</span>
-          </span>
-          <textarea
-            name="notes"
-            rows={4}
-            value={values.notes}
-            onChange={(e) => setField("notes", e.target.value)}
-            placeholder={t("notesPh")}
-            className="mt-2 w-full resize-none rounded-[8px] border border-border-soft bg-white px-4 py-3 text-[15px] text-foreground outline-none transition placeholder:text-text-placeholder focus:border-brand"
-          />
-        </label>
-      </div>
+      {errors._plan ? (
+        <p className="mt-4 text-center text-[14px] text-[#EF4444]">
+          {errors._plan}
+        </p>
+      ) : null}
+      {submitError ? (
+        <p className="mt-4 text-center text-[14px] text-[#EF4444]">{submitError}</p>
+      ) : null}
 
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || loading || fields.length === 0}
         className="mt-8 inline-flex h-12 w-full items-center justify-center rounded-[6px] bg-brand text-[16px] font-medium text-white transition hover:bg-[#0052db] disabled:opacity-70"
       >
         {submitting ? t("submitting") : t("submit")}
@@ -318,10 +361,10 @@ export function RegistrationForm({ meetingId, plan }: RegistrationFormProps) {
 
       <div className="mt-4 text-center">
         <Link
-          href={`/meetings/${meetingId}`}
+          href={`/meetings/${meetingId}/tickets`}
           className="text-[15px] font-medium text-brand hover:underline"
         >
-          {t("backToEvents")}
+          {t("backToTickets")}
         </Link>
       </div>
     </form>

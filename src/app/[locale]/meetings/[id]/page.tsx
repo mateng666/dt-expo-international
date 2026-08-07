@@ -4,21 +4,19 @@ import { setRequestLocale } from "next-intl/server";
 import { ExhibitionIntro } from "@/components/meeting/ExhibitionIntro";
 import { MeetingBanner } from "@/components/meeting/MeetingBanner";
 import { OrganizationStructure } from "@/components/meeting/OrganizationStructure";
-import { getAllMeetingIds, getMeetingById } from "@/data/meetings";
+import { getMeetingById } from "@/data/meetings";
+import { fetchMeetingDetail } from "@/lib/intl-api";
 
 interface MeetingDetailPageProps {
   params: Promise<{ locale: string; id: string }>;
-}
-
-export function generateStaticParams() {
-  return getAllMeetingIds().map((id) => ({ id }));
 }
 
 export async function generateMetadata({
   params,
 }: MeetingDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const meeting = getMeetingById(id);
+  const meeting =
+    (await fetchMeetingDetail(id, true)) ?? getMeetingById(id);
   if (!meeting) return { title: "Meeting Not Found" };
   return {
     title: meeting.detail.bannerTitle,
@@ -31,14 +29,17 @@ export default async function MeetingDetailPage({
 }: MeetingDetailPageProps) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-  const meeting = getMeetingById(id);
+  const meeting =
+    (await fetchMeetingDetail(id, true)) ?? getMeetingById(id);
   if (!meeting) notFound();
 
   return (
     <main className="flex-1">
       <MeetingBanner meetingId={id} detail={meeting.detail} />
       <ExhibitionIntro paragraphs={meeting.detail.introduction} />
-      <OrganizationStructure items={meeting.detail.organization} />
+      {meeting.detail.organization.length > 0 ? (
+        <OrganizationStructure items={meeting.detail.organization} />
+      ) : null}
     </main>
   );
 }

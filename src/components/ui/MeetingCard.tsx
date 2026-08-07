@@ -29,8 +29,13 @@ interface MeetingCardProps {
   meeting: Meeting;
 }
 
+function isRemoteSrc(src: string) {
+  return /^https?:\/\//i.test(src);
+}
+
 export function MeetingCard({ meeting }: MeetingCardProps) {
   const t = useTranslations("Home");
+  const remote = isRemoteSrc(meeting.image);
 
   return (
     <Link
@@ -43,6 +48,7 @@ export function MeetingCard({ meeting }: MeetingCardProps) {
             src={meeting.image}
             alt={meeting.title}
             fill
+            unoptimized={remote}
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 400px"
           />

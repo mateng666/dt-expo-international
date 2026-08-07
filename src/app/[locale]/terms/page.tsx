@@ -5,6 +5,7 @@ import {
   LegalSection,
 } from "@/components/legal/LegalDocLayout";
 import { LEGAL_LAST_UPDATED, getTermsContent } from "@/data/legal-pages";
+import { fetchLegal } from "@/lib/intl-api";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -14,18 +15,28 @@ export const metadata: Metadata = {
 
 export default async function TermsPage() {
   const locale = await getLocale();
-  const content = getTermsContent(locale);
+  const apiDoc = await fetchLegal("terms", true);
+  const fallback = getTermsContent(locale);
+
+  const title = apiDoc?.title || fallback.title;
+  const lastUpdated = apiDoc?.effectiveDate || LEGAL_LAST_UPDATED;
+  const lastUpdatedLabel =
+    apiDoc?.lastUpdatedLabel || fallback.lastUpdatedLabel;
+  const sections =
+    apiDoc?.sections && apiDoc.sections.length > 0
+      ? apiDoc.sections
+      : fallback.sections;
 
   return (
     <LegalDocLayout
-      title={content.title}
-      lastUpdated={LEGAL_LAST_UPDATED}
-      lastUpdatedLabel={content.lastUpdatedLabel}
+      title={title}
+      lastUpdated={lastUpdated}
+      lastUpdatedLabel={lastUpdatedLabel}
     >
-      {content.sections.map((section) => (
+      {sections.map((section) => (
         <LegalSection key={section.title} title={section.title}>
-          {section.paragraphs
-            .filter((p) => p.length > 0)
+          {(section.paragraphs || [])
+            .filter((p) => p && p.length > 0)
             .map((p) => (
               <p key={p.slice(0, 48)}>{p}</p>
             ))}

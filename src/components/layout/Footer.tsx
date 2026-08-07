@@ -38,10 +38,10 @@ export async function Footer() {
           <p className="mt-4 max-w-[280px] text-[14px] leading-6 text-text-body">
             {t("tagline")}
           </p>
-          <p className="mt-3 max-w-[320px] text-[13px] leading-5 text-text-muted">
+          <p className="mt-3 max-w-[320px] text-[14px] leading-6 text-foreground">
             {t("operatedBy")}: {SITE_CONTACT.companyName}
           </p>
-          <p className="mt-1 max-w-[320px] text-[13px] leading-5 text-text-muted">
+          <p className="mt-1 max-w-[320px] text-[14px] leading-6 text-text-body">
             {SITE_CONTACT.address}
           </p>
           <div className="mt-5 flex items-center gap-3">
@@ -106,30 +106,18 @@ export async function Footer() {
 
       <div className="border-t border-border-footer">
         <div className="container-content flex flex-col gap-3 py-5 text-[14px] sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-text-muted">{t("copyright")}</p>
+          <p className="text-text-body">{t("copyright")}</p>
           <div className="flex flex-wrap gap-5">
-            <Link
-              href="/privacy"
-              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
-            >
+            <Link href="/privacy" className="hover:text-brand">
               {t("privacy")}
             </Link>
-            <Link
-              href="/terms"
-              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
-            >
+            <Link href="/terms" className="hover:text-brand">
               {t("terms")}
             </Link>
-            <Link
-              href="/refund-policy"
-              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
-            >
+            <Link href="/refund-policy" className="hover:text-brand">
               {t("refund")}
             </Link>
-            <Link
-              href="/cookie-policy"
-              className="cursor-pointer text-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
-            >
+            <Link href="/cookie-policy" className="hover:text-brand">
               {t("cookie")}
             </Link>
           </div>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { CalendarDays } from "lucide-react";
-import { meetings, type MeetingCategory } from "@/data/meetings";
+import type { Meeting, MeetingCategory } from "@/data/meetings";
 import { MeetingCard } from "@/components/ui/MeetingCard";
 
 const FILTER_KEYS = [
@@ -26,7 +26,11 @@ const FILTER_TO_CATEGORY: Record<string, MeetingCategory | null> = {
   salon: "Salon",
 };
 
-export function LatestMeetings() {
+interface LatestMeetingsProps {
+  meetings: Meeting[];
+}
+
+export function LatestMeetings({ meetings }: LatestMeetingsProps) {
   const t = useTranslations("Home");
   const [active, setActive] = useState<(typeof FILTER_KEYS)[number]>("all");
 
@@ -34,7 +38,7 @@ export function LatestMeetings() {
     const category = FILTER_TO_CATEGORY[active];
     if (!category) return meetings;
     return meetings.filter((item) => item.category === category);
-  }, [active]);
+  }, [active, meetings]);
 
   return (
     <section id="latest-meetings" className="bg-white py-[80px]">
@@ -74,11 +78,20 @@ export function LatestMeetings() {
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filtered.map((meeting) => (
-            <div key={meeting.id} className="flex justify-center xl:justify-start">
-              <MeetingCard meeting={meeting} />
-            </div>
-          ))}
+          {filtered.length === 0 ? (
+            <p className="col-span-full text-center text-[15px] text-text-muted">
+              {t("noMeetings")}
+            </p>
+          ) : (
+            filtered.map((meeting) => (
+              <div
+                key={meeting.id}
+                className="flex justify-center xl:justify-start"
+              >
+                <MeetingCard meeting={meeting} />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>

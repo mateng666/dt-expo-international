@@ -19,6 +19,7 @@ export async function MeetingBanner({ meetingId, detail }: MeetingBannerProps) {
         alt=""
         fill
         priority
+        unoptimized={/^https?:\/\//i.test(detail.bannerImage)}
         className="object-cover"
         sizes="100vw"
       />

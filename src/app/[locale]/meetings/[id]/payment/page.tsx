@@ -3,16 +3,12 @@ import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { PaymentCheckoutCard } from "@/components/payment/PaymentCheckoutCard";
 import { DecorBackground } from "@/components/shared/DecorBackground";
-import { buildPendingOrder } from "@/data/payment";
-import { getAllMeetingIds, getMeetingById } from "@/data/meetings";
+import { getMeetingById } from "@/data/meetings";
+import { fetchMeetingDetail } from "@/lib/intl-api";
 
 interface PaymentCheckoutPageProps {
   params: Promise<{ locale: string; id: string }>;
-  searchParams: Promise<{ plan?: string }>;
-}
-
-export function generateStaticParams() {
-  return getAllMeetingIds().map((id) => ({ id }));
+  searchParams: Promise<{ plan?: string; orderSn?: string }>;
 }
 
 export const metadata: Metadata = {
@@ -24,12 +20,11 @@ export default async function PaymentCheckoutPage({
   searchParams,
 }: PaymentCheckoutPageProps) {
   const { locale, id } = await params;
-  const { plan } = await searchParams;
+  const { plan, orderSn } = await searchParams;
   setRequestLocale(locale);
-  const meeting = getMeetingById(id);
+  const meeting =
+    (await fetchMeetingDetail(id, true)) ?? getMeetingById(id);
   if (!meeting) notFound();
-
-  const order = buildPendingOrder(meeting.title, plan);
 
   return (
     <main className="flex flex-1 flex-col">
@@ -37,7 +32,7 @@ export default async function PaymentCheckoutPage({
         <div className="container-content w-full">
           <PaymentCheckoutCard
             meetingId={id}
-            order={order}
+            orderSn={orderSn}
             plan={plan}
           />
         </div>

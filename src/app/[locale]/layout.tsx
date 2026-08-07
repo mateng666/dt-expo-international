@@ -33,6 +33,14 @@ export async function generateMetadata({
     },
     description: t("homeDescription"),
     applicationName: t("siteName"),
+    icons: {
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/brand/icon.png", type: "image/png", sizes: "32x32" },
+        { url: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
+      ],
+      apple: [{ url: "/brand/apple-icon.png", sizes: "180x180" }],
+    },
     openGraph: {
       type: "website",
       locale: locale === "zh" ? "zh_CN" : "en_US",

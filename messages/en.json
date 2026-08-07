@@ -5,9 +5,15 @@
     "siteName": "Eventnovas"
   },
   "Header": {
-    "ditexpo": "DITExpo",
+    "ditexpo": "Meetings",
+    "lookup": "Ticket Lookup",
     "searchPlaceholder": "Search conferences...",
     "loginRegister": "Log in / Register",
+    "myAccount": "My account",
+    "userCenter": "User Center",
+    "myTickets": "My tickets",
+    "myOrders": "My orders",
+    "logOut": "Log out",
     "language": "Language",
     "langEn": "EN",
     "langZh": "中文"
@@ -62,6 +68,7 @@
     "emailPlaceholder": "Enter your email",
     "subscribe": "Subscribe",
     "exploreMeetings": "Explore Meetings",
+    "noMeetings": "No meetings found. Please try again later.",
     "slides": {
       "s1Eyebrow": "Global Tech, New Connections",
       "s1Title": "Eventnovas for Global Tech Events",
@@ -96,6 +103,10 @@
     "continue": "Continue",
     "selectHint": "Select a ticket type to continue. Prices are in US Dollars (USD).",
     "selectRequired": "Please select a ticket first.",
+    "empty": "No ticket types available for this event.",
+    "loadError": "Failed to load ticket types.",
+    "unavailableTitle": "Registration unavailable",
+    "unavailable": "Tickets are not available for this event yet. Please check back later or contact the organizer.",
     "bestValue": "Best value",
     "standard": "Standard",
     "pro": "Pro",
@@ -125,6 +136,10 @@
     "submit": "Register Now",
     "submitting": "Submitting...",
     "backToEvents": "Back to Events",
+    "backToTickets": "Back to Tickets",
+    "selectedPlan": "Selected ticket",
+    "noFields": "Registration form is not configured for this channel.",
+    "loadingForm": "Loading registration form…",
     "errors": {
       "fullName": "Please enter your full name.",
       "company": "Please enter your company name.",
@@ -133,7 +148,12 @@
       "email": "Please enter your email address.",
       "emailInvalid": "Please enter a valid email address.",
       "region": "Please select your region.",
-      "topics": "Please select at least one interested topic."
+      "topics": "Please select at least one interested topic.",
+      "plan": "Please select a ticket type from the tickets page first.",
+      "submit": "Registration failed. Please try again.",
+      "loadForm": "Failed to load registration form.",
+      "required": "{field} is required.",
+      "maxLength": "{field} must be at most {max} characters."
     }
   },
   "Payment": {
@@ -141,6 +161,12 @@
     "checkoutSubtitle": "Your registration is saved. Please complete payment to confirm your ticket.",
     "checkoutNote": "You will be redirected to Stripe Checkout to pay securely. Card details are processed by Stripe.",
     "payNow": "Pay Now",
+    "paying": "Redirecting…",
+    "loading": "Loading order…",
+    "loadError": "Failed to load order.",
+    "missingOrder": "Missing order number. Please register again.",
+    "noCheckoutUrl": "Checkout URL is unavailable. Please try again later.",
+    "payError": "Unable to start payment.",
     "changeTicket": "Change Ticket",
     "ticketType": "Ticket Type",
     "amountDue": "Amount Due",
@@ -191,5 +217,20 @@
   "Common": {
     "prevSlide": "Previous slide",
     "nextSlide": "Next slide"
+  },
+  "Lookup": {
+    "title": "Ticket Lookup",
+    "subtitle": "Enter the name and email used at registration to find your tickets.",
+    "name": "Full Name",
+    "namePh": "Enter your full name",
+    "email": "Email",
+    "emailPh": "Enter your email",
+    "search": "Search",
+    "searching": "Searching…",
+    "required": "Name and email are required.",
+    "failed": "Lookup failed. Please try again.",
+    "empty": "No tickets found.",
+    "ticketNo": "Ticket No.",
+    "status": "Status"
   }
 }

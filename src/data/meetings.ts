@@ -40,6 +40,8 @@ export interface Meeting {
   attendees: string;
   image: string;
   detail: MeetingDetail;
+  /** 会议默认报名通道；无深链参数时用此拉票种 */
+  signupChannelId?: string | null;
 }
 
 export const MEETING_FILTERS = [

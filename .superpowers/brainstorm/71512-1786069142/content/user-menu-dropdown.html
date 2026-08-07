@@ -1,0 +1,64 @@
+<h2>门户已登录：用户菜单怎么放？</h2>
+<p class="subtitle">当前是点昵称直接进用户中心。选一个下拉形态（可点选）</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8fafc;padding:16px;min-height:220px">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;position:relative">
+        <span style="font-size:13px;color:#111">👤 Alex Chen ▾</span>
+        <div style="position:absolute;top:44px;right:0;width:200px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;text-align:left">
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px;background:#eff6ff">用户中心</div>
+          <div style="padding:10px 12px;font-size:13px;color:#b91c1c;border-radius:6px">退出登录</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · 精简下拉</h3>
+      <p>用户中心 + 退出。改动最小，符合你说的「出现用户中心」。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8fafc;padding:16px;min-height:220px">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;position:relative">
+        <span style="font-size:13px;color:#111">👤 Alex Chen ▾</span>
+        <div style="position:absolute;top:44px;right:0;width:220px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;text-align:left">
+          <div style="padding:8px 12px 10px;border-bottom:1px solid #f3f4f6;margin-bottom:4px">
+            <div style="font-size:13px;font-weight:600;color:#111">Alex Chen</div>
+            <div style="font-size:11px;color:#6b7280">alex@example.com</div>
+          </div>
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px;background:#eff6ff">我的票</div>
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px">我的订单</div>
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px">账号设置</div>
+          <div style="height:1px;background:#f3f4f6;margin:4px 0"></div>
+          <div style="padding:10px 12px;font-size:13px;color:#b91c1c;border-radius:6px">退出登录</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · 分组快捷入口</h3>
+      <p>直接跳到用户中心各页（票/订单/设置）+ 退出。少一次点进首页再找。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8fafc;padding:16px;min-height:220px">
+      <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;position:relative">
+        <span style="font-size:13px;color:#111">👤 Alex Chen ▾</span>
+        <div style="position:absolute;top:44px;right:0;width:210px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);padding:6px;text-align:left">
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px;background:#eff6ff">用户中心</div>
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px">我的票</div>
+          <div style="padding:10px 12px;font-size:13px;color:#111;border-radius:6px">我的订单</div>
+          <div style="height:1px;background:#f3f4f6;margin:4px 0"></div>
+          <div style="padding:10px 12px;font-size:13px;color:#b91c1c;border-radius:6px">退出登录</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · 用户中心总入口 + 常用两项</h3>
+      <p>折中：总入口进用户中心，票/订单快捷跳转，再加退出。</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1.5rem">点卡片选择；也可以在对话里直接说 A / B / C。</p>

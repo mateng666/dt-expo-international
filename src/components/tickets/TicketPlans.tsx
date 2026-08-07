@@ -9,17 +9,28 @@ import { TicketCard } from "./TicketCard";
 interface TicketPlansProps {
   meetingId: string;
   tiers: TicketTier[];
+  /** 深链参数 c/m/i，拼到报名页 */
+  linkQuery?: string;
 }
 
-export function TicketPlans({ meetingId, tiers }: TicketPlansProps) {
+export function TicketPlans({
+  meetingId,
+  tiers,
+  linkQuery,
+}: TicketPlansProps) {
   const t = useTranslations("Tickets");
   const defaultId =
-    tiers.find((tier) => tier.badge || tier.highlighted)?.id ?? tiers[0]?.id ?? null;
+    tiers.find((tier) => tier.badge || tier.highlighted)?.id ??
+    tiers[0]?.id ??
+    null;
   const [selectedId, setSelectedId] = useState<string | null>(defaultId);
 
-  const registerHref = selectedId
-    ? `/meetings/${meetingId}/register?plan=${selectedId}`
-    : null;
+  const registerHref = (() => {
+    if (!selectedId) return null;
+    const params = new URLSearchParams(linkQuery || "");
+    params.set("plan", selectedId);
+    return `/meetings/${meetingId}/register?${params.toString()}`;
+  })();
 
   return (
     <section className="bg-[#F5F8FC] py-[80px]">
